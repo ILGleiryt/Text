@@ -114,12 +114,14 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
       <FloatingPointModel>Fast</FloatingPointModel>
       <BuildStlModules>false</BuildStlModules>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <TranslateIncludes>false</TranslateIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,9 +159,8 @@
     <ClCompile Include="win32_window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IEventHandler.h" />
     <ClInclude Include="win32_window.hpp" />
-    <ClInclude Include="win_includes.hpp" />
+    <ClCompile Include="win_includes.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

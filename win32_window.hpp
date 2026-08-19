@@ -1,41 +1,49 @@
 #pragma once
-#include <string>
-// getkeystate, methods thats calls on event should be here? onMove, onSize etc.
+import std;
+
 class Window
 {
 public:
-    Window();
+    [[nodiscard]] Window();
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
     ~Window() noexcept;
 
-    int RunMessageLoop();
-    bool Create(int width, int height, const std::wstring& title);
+    int RunMessageLoop() const noexcept;
+
+    [[nodiscard]] bool Create(int width, int height, const std::wstring& title);
+
+    void SetTitle(const std::wstring& title) const noexcept;
+
+    void Destroy() const noexcept;
+
     void Show() const noexcept;
-    void Hide() const noexcept; // use CloseWindow(hwnd)!
+
+    void Minimize()  const noexcept;
+    void Maximize() const noexcept;
+    [[nodiscard]] HWND GetHandle() const noexcept { return main_handle; }
+    [[nodiscard]] bool IsCreated() const noexcept { return is_created; }
+    // when first wm_create appears i use dpi_check i store pdi value in storage
+    // and use it with every wm_pain for correct size
+    // maybe i need look to wm_dpichange?
     //int GetWidth() const;
     //int GetHeight() const;
     //RECT GetClientRect();
-    void SetTitle(const std::wstring& title) const;
-    // maximize?, minimize?, close?, draw?(this may be not this class responsibility), resize?, work with dpi?,
-    //void SetEventHandler(IEventHandler* handler);
+    //resize?, work with dpi?,
 
 private:
-    struct window_info
-    {
-        //store prev size, state, files and etc.
-    };
-    //getClientWidth, getClientHeight
-    //getWindowWidth, getWindowHeight
     static LRESULT CALLBACK WindowProcedure(HWND handle, UINT message, WPARAM wparam, LPARAM lparam);
 
-   bool is_created {};
-   static inline bool is_maximized { false };
-   static inline bool is_collapsed { false };
-    bool fullscreen   { false }; // store data and write it to storage file
-    int client_width  {};
+    int dpi = DEFAULT_DPI;
+    //getClientWidth, getClientHeight
+    //getWindowWidth, getWindowHeight
+    bool is_created {};
+    bool is_maximized { false };
+    bool is_collapsed { false };
+    bool fullscreen { false }; // store data and write it to storage file
+    int client_width {};
     int client_height {};
+
     HINSTANCE instance_handle {};
-    HWND main_handle;
-    //IEventHandler* event_handler;
+    HWND main_handle {};
 };

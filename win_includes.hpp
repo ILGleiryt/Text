@@ -10,5 +10,7 @@
 #define NOCOMM
 #define STRICT
 
-#include <windows.h>
-#include <Windowsx.h>
+#include <Windows.h> // winapi doesnt properly work as header unit
+#include <windowsx.h> // macro defines doesnt work with min/max/no[defines]
+
+constexpr int DEFAULT_DPI = USER_DEFAULT_SCREEN_DPI;
