@@ -21,8 +21,8 @@ public:
 
     void Minimize()  const noexcept;
     void Maximize() const noexcept;
-    [[nodiscard]] HWND GetHandle() const noexcept { return main_handle; }
-    [[nodiscard]] bool IsCreated() const noexcept { return is_created; }
+    [[nodiscard]] HWND GetHandle() const noexcept { return this->main_handle; }
+    [[nodiscard]] bool IsCreated() const noexcept { return this->is_created; }
     // when first wm_create appears i use dpi_check i store pdi value in storage
     // and use it with every wm_pain for correct size
     // maybe i need look to wm_dpichange?

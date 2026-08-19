@@ -1,6 +1,7 @@
 import std;
 #include "win_includes.hpp"
 #include "win32_window.hpp"
+#include <cassert>
 
 Window::Window() :
     main_handle(nullptr),
@@ -24,6 +25,8 @@ Window::~Window() noexcept
 
 void Window::SetTitle(const std::wstring& title) const noexcept
 {
+    assert(title != L"" && "Window must be named");
+    if (title == L"") return;
     SetWindowTextW(GetHandle(), title.c_str());
 }
 
@@ -108,7 +111,7 @@ LRESULT CALLBACK Window::WindowProcedure(HWND handle, UINT message, WPARAM wpara
 
 int Window::RunMessageLoop() const noexcept
 {
-    MSG message {};
+    MSG message { 0 };
     while (GetMessageW(&message, nullptr, 0, 0) > 0)
     {
         TranslateMessage(&message);
@@ -119,13 +122,15 @@ int Window::RunMessageLoop() const noexcept
 
 bool Window::Create(int width, int height, const std::wstring& title)
 {
+    assert(width > 0 && "Use positive or upper 0 width");
+    assert(height > 0 && "Use positive or upper 0 height");
     /*work with windows vista and above*/ SetProcessDPIAware(); // use for correctly work with not standard dpi (dpi > 96)
     // SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE) work from windows version 8.1
     // SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2) only from windows 10
 
     WNDCLASSEXW MainWindow = { 0 };
 
-    MainWindow.cbSize = sizeof(WNDCLASSEXW),
+    MainWindow.cbSize = sizeof(WNDCLASSEXW);
     MainWindow.style = CS_OWNDC;
     MainWindow.lpfnWndProc = WindowProcedure; //DefWindowProcW
     MainWindow.cbClsExtra = 0;
@@ -138,12 +143,19 @@ bool Window::Create(int width, int height, const std::wstring& title)
     MainWindow.lpszClassName = L"MainWindow";
     MainWindow.hIconSm = nullptr;
 
+    assert(MainWindow.cbSize == sizeof(WNDCLASSEXW));
+    assert(MainWindow.hInstance != nullptr);
+    assert(MainWindow.lpfnWndProc != nullptr);
+    assert(MainWindow.lpszClassName != nullptr);
+
     if (!RegisterClassExW(&MainWindow))
         return false;
 
     main_handle = CreateWindowExW(WS_EX_TOPMOST, MainWindow.lpszClassName, title.c_str(),
         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
         width, height, nullptr, nullptr, MainWindow.hInstance, nullptr);
+
+    assert(main_handle != nullptr);
 
     if (!main_handle)
         return false;

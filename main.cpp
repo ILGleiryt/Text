@@ -1,24 +1,28 @@
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #if defined(__INTELLISENSE__)
 #include <string>
-#include <memory>
+#include <memory> // HACK FOR INTELLISENSE WORKING FOR MODULES
 #else
 import std;
 #endif
-#include "win_includes.hpp"
-#include "win32_window.hpp"
+import Module;
 
-int CALLBACK wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
-    _In_ PWSTR pCmdLine, _In_ int nCmdShow)
+int CALLBACK wWinMain( 
+    [[maybe_unused]] HINSTANCE hInstance, 
+    [[maybe_unused]] HINSTANCE hPrevInstance,
+    [[maybe_unused]] PWSTR pCmdLine,
+    [[maybe_unused]] int nCmdShow)
 {
-    std::unique_ptr<Window> win = std::make_unique<Window>();
+    auto win = std::make_unique<Window>();
 
     if (!win->Create(400, 300, L"Privet"))
     {
-        MessageBoxW(nullptr, L"Window doesnt created", L"Error", MB_OK);
+        MessageBoxW(nullptr, L"Register Window class or create window return error",
+            L"Window creation error", MB_ICONWARNING|MB_OK);
         std::exit(-1);
     }
 
-    win->RunMessageLoop();
-
-    return 0;
+    
+    return win->RunMessageLoop();
 }
